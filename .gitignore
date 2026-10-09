@@ -15,3 +15,5 @@ apps/mobile/android
 *.log
 .DS_Store
 *.tsbuildinfo
+dist-check
+.expo
