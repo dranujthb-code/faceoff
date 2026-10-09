@@ -1,0 +1,49 @@
+name: CI
+on:
+  push: { branches: [main] }
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env: { POSTGRES_PASSWORD: postgres }
+        ports: ["54322:5432"]
+        options: --health-cmd pg_isready --health-interval 5s --health-timeout 5s --health-retries 10
+    env:
+      APP_ENV: test
+      APP_URL: http://localhost:3000
+      DATABASE_URL: postgres://faceoff_api:faceoff_api_dev_password@127.0.0.1:54322/faceoff_dev
+      DATABASE_ADMIN_URL: postgres://postgres:postgres@127.0.0.1:54322/faceoff_dev
+      TEST_DATABASE_ADMIN_URL: postgres://postgres:postgres@127.0.0.1:54322/faceoff_test
+      TEST_DATABASE_URL: postgres://faceoff_api:faceoff_api_dev_password@127.0.0.1:54322/faceoff_test
+      DB_CREATE_APP_ROLE: "true"
+      EMAIL_DRIVER: dev
+      STORAGE_DRIVER: local
+      CRON_SECRET: ci-cron-secret
+      SEED_ADMIN_EMAIL: admin@faceoff.local
+      SEED_ADMIN_PASSWORD: ChangeMe-Admin-2026
+      SEED_DEMO_CONTENT: "true"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: pnpm }
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm -r typecheck
+      - run: pnpm --filter @faceoff/web lint
+      - run: pnpm --filter @faceoff/shared test
+      - run: pnpm --filter @faceoff/mobile test
+      - run: pnpm db:migrate && pnpm db:seed
+      - run: pnpm --filter @faceoff/web build
+      - name: Start server
+        run: pnpm --filter @faceoff/web start & npx wait-on http://localhost:3000/api/health
+      - run: pnpm --filter @faceoff/web test
+      - run: pnpm --filter @faceoff/web exec playwright install --with-deps chromium
+      - run: pnpm --filter @faceoff/web test:e2e
+        env: { TEST_BASE_URL: "http://localhost:3000", PLAYWRIGHT_CHROMIUM_PATH: "" }
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with: { name: playwright-report, path: apps/web/playwright-report }

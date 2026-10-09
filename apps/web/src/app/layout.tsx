@@ -3,7 +3,8 @@ import "./globals.css";
 import { ThemeScript } from "@/components/ThemeScript";
 import { ToastProvider } from "@/components/Toast";
 
-const APP_URL = process.env.APP_URL ?? "http://localhost:3000";
+const vercelHost = process.env.VERCEL_PROJECT_PRODUCTION_URL ?? process.env.VERCEL_URL;
+const APP_URL = process.env.APP_URL || (vercelHost ? `https://${vercelHost}` : "http://localhost:3000");
 
 export const metadata: Metadata = {
   metadataBase: new URL(APP_URL),

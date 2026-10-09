@@ -28,7 +28,10 @@ const schema = z.object({
 });
 
 function load() {
-  const parsed = schema.safeParse(process.env);
+  // On Vercel, default APP_URL to the deployment's own domain when it isn't set explicitly.
+  const vercelHost = process.env.VERCEL_PROJECT_PRODUCTION_URL ?? process.env.VERCEL_URL;
+  const source = { ...process.env, APP_URL: process.env.APP_URL || (vercelHost ? `https://${vercelHost}` : undefined) };
+  const parsed = schema.safeParse(source);
   if (!parsed.success) {
     const msg = parsed.error.issues.map((i) => `${i.path.join(".")}: ${i.message}`).join("; ");
     throw new Error(`Invalid environment configuration — ${msg}`);
@@ -37,6 +40,8 @@ function load() {
   if (e.APP_ENV === "production") {
     if (e.EMAIL_DRIVER === "dev") throw new Error("EMAIL_DRIVER=dev is not allowed in production");
     if (!e.CRON_SECRET || e.CRON_SECRET.startsWith("change-me")) throw new Error("Set a strong CRON_SECRET in production");
+    // Serverless file systems are ephemeral: uploads must go to S3-compatible storage.
+    if (e.STORAGE_DRIVER !== "s3") throw new Error("STORAGE_DRIVER must be s3 in production");
   }
   return e;
 }
@@ -49,5 +54,6 @@ export const features = {
     env.LIVEKIT_EGRESS_ENABLED && env.LIVEKIT_URL && env.LIVEKIT_API_KEY && env.S3_BUCKET && env.S3_ACCESS_KEY_ID,
   ),
   email: env.EMAIL_DRIVER === "resend" && Boolean(env.RESEND_API_KEY),
+  /** Captured emails: open in development; staff-only on staging; never in production. */
   devMailbox: env.EMAIL_DRIVER === "dev" && env.APP_ENV !== "production",
 };

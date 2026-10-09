@@ -88,6 +88,8 @@ async function main() {
   const demo = process.env.SEED_DEMO_CONTENT === "true";
   try {
     await sql.begin(async (tx) => {
+      // Write as service_role so seeding works on hosts where the owner role is subject to RLS (e.g. Supabase).
+      await tx.unsafe("set local role service_role");
       for (const [i, [slug, name, description, featured]] of TOPICS.entries()) {
         await tx`insert into faceoff.topics (slug, name, description, is_featured, sort_order) values (${slug}, ${name}, ${description}, ${featured}, ${i * 10})
                  on conflict (slug) do update set name = excluded.name, description = excluded.description`;
