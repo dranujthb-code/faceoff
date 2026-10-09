@@ -3,7 +3,7 @@ import sharp from "sharp";
 import { randomBytes } from "node:crypto";
 import type { CommunitySummary, ProfileDetail, ProfileSummary, ProfileUpdateInput, TopicSummary } from "@faceoff/shared";
 import { asService, asUser, type Tx } from "../db";
-import { badRequest, notFound } from "../errors";
+import { ApiError, badRequest, notFound } from "../errors";
 import { putObject } from "../storage";
 import { toProfileSummary } from "./mappers";
 import { notify } from "./notifications";
@@ -119,6 +119,10 @@ const MAX_AVATAR_BYTES = 5 * 1024 * 1024;
 
 /** Re-encodes to 512×512 WebP: strips EXIF/GPS metadata and neutralizes malformed images. */
 export async function uploadAvatar(userId: string, file: File): Promise<{ avatarUrl: string }> {
+  // Serverless hosts have no persistent disk: without S3 storage, say so instead of failing obscurely.
+  if (process.env.VERCEL && process.env.STORAGE_DRIVER !== "s3") {
+    throw new ApiError(503, "uploads_unavailable", "Picture uploads aren't set up on this server yet.");
+  }
   if (file.size > MAX_AVATAR_BYTES) throw badRequest("Images must be under 5 MB");
   if (!["image/jpeg", "image/png", "image/webp", "image/gif"].includes(file.type)) throw badRequest("Use a JPG, PNG, WebP or GIF image");
   let out: Buffer;
