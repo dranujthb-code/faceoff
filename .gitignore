@@ -1,0 +1,16 @@
+node_modules
+.next
+.turbo
+dist
+coverage
+.env
+.env.local
+.env.*.local
+apps/web/.data
+apps/web/test-results
+apps/web/playwright-report
+apps/mobile/.expo
+apps/mobile/ios
+apps/mobile/android
+*.log
+.DS_Store

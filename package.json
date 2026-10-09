@@ -1,0 +1,19 @@
+{
+  "name": "faceoff",
+  "private": true,
+  "version": "0.1.0",
+  "description": "FaceOff — live, unscripted 1:1 debates. You Have a Voice.",
+  "packageManager": "pnpm@10.28.0",
+  "engines": { "node": ">=22" },
+  "scripts": {
+    "dev": "pnpm --filter @faceoff/web dev",
+    "build": "pnpm --filter @faceoff/web build",
+    "db:migrate": "pnpm --filter @faceoff/web db:migrate",
+    "db:seed": "pnpm --filter @faceoff/web db:seed",
+    "db:reset": "pnpm --filter @faceoff/web db:reset",
+    "typecheck": "pnpm -r typecheck",
+    "lint": "pnpm -r lint",
+    "test": "pnpm -r test",
+    "test:e2e": "pnpm --filter @faceoff/web test:e2e"
+  }
+}

@@ -1,0 +1,206 @@
+@import "tailwindcss";
+@import "@fontsource-variable/inter";
+@import "@fontsource-variable/source-serif-4";
+
+/* Theme tokens — mirror packages/shared/src/tokens.ts (kept in sync by tokens.test.ts). */
+:root {
+  --fo-bg: #FBF7EF;
+  --fo-surface: #FFFFFF;
+  --fo-surface-raised: #FFFFFF;
+  --fo-surface-sunken: #F3ECDF;
+  --fo-border: #E4DBCB;
+  --fo-border-strong: #C9C6BE;
+  --fo-text: #0B1419;
+  --fo-text-muted: #525C63;
+  --fo-text-subtle: #646C71;
+  --fo-primary: #C93B35;
+  --fo-primary-text: #FFFFFF;
+  --fo-primary-hover: #A82F2A;
+  --fo-accent: #3B7189;
+  --fo-accent-text: #FFFFFF;
+  --fo-accent-hover: #2C5A6F;
+  --fo-link: #2C5A6F;
+  --fo-for: #3B7189;
+  --fo-for-soft: #EEF4F7;
+  --fo-against: #B8352F;
+  --fo-against-soft: #FCEDEC;
+  --fo-live: #C93B35;
+  --fo-success: #2F7D5B;
+  --fo-warning: #8A5A12;
+  --fo-danger: #A82F2A;
+  --fo-focus: #3B7189;
+  --fo-ink: #0B1419;
+  --fo-logo-blue: #6498AD;
+  --fo-logo-red: #E5504A;
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --fo-bg: #161B20;
+    --fo-surface: #1F252B;
+    --fo-surface-raised: #2A3138;
+    --fo-surface-sunken: #111519;
+    --fo-border: #2A3138;
+    --fo-border-strong: #3A424A;
+    --fo-text: #F1EBDF;
+    --fo-text-muted: #B5B0A6;
+    --fo-text-subtle: #9A968E;
+    --fo-primary: #C93B35;
+    --fo-primary-text: #FFFFFF;
+    --fo-primary-hover: #B8352F;
+    --fo-accent: #6498AD;
+    --fo-accent-text: #0B1419;
+    --fo-accent-hover: #8DB5C6;
+    --fo-link: #8DB5C6;
+    --fo-for: #6498AD;
+    --fo-for-soft: #1C2C35;
+    --fo-against: #EE6A64;
+    --fo-against-soft: #3A2120;
+    --fo-success: #4FB286;
+    --fo-warning: #E0A84A;
+    --fo-danger: #F07A74;
+    --fo-focus: #8DB5C6;
+    --fo-ink: #F1EBDF;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --fo-bg: #161B20;
+  --fo-surface: #1F252B;
+  --fo-surface-raised: #2A3138;
+  --fo-surface-sunken: #111519;
+  --fo-border: #2A3138;
+  --fo-border-strong: #3A424A;
+  --fo-text: #F1EBDF;
+  --fo-text-muted: #B5B0A6;
+  --fo-text-subtle: #9A968E;
+  --fo-primary: #C93B35;
+  --fo-primary-text: #FFFFFF;
+  --fo-primary-hover: #B8352F;
+  --fo-accent: #6498AD;
+  --fo-accent-text: #0B1419;
+  --fo-accent-hover: #8DB5C6;
+  --fo-link: #8DB5C6;
+  --fo-for: #6498AD;
+  --fo-for-soft: #1C2C35;
+  --fo-against: #EE6A64;
+  --fo-against-soft: #3A2120;
+  --fo-success: #4FB286;
+  --fo-warning: #E0A84A;
+  --fo-danger: #F07A74;
+  --fo-focus: #8DB5C6;
+  --fo-ink: #F1EBDF;
+  color-scheme: dark;
+}
+
+/* The live room is always the charcoal "stage" from the mockups, regardless of theme. */
+.fo-stage {
+  --fo-bg: #161B20;
+  --fo-surface: #1F252B;
+  --fo-surface-raised: #2A3138;
+  --fo-surface-sunken: #111519;
+  --fo-border: #2A3138;
+  --fo-border-strong: #3A424A;
+  --fo-text: #F1EBDF;
+  --fo-text-muted: #B5B0A6;
+  --fo-text-subtle: #9A968E;
+  --fo-for: #6498AD;
+  --fo-for-soft: #1C2C35;
+  --fo-against: #EE6A64;
+  --fo-against-soft: #3A2120;
+  --fo-primary: #C93B35;
+  --fo-primary-hover: #B8352F;
+  --fo-accent: #6498AD;
+  --fo-accent-text: #0B1419;
+  --fo-link: #8DB5C6;
+  --fo-focus: #8DB5C6;
+  --fo-ink: #F1EBDF;
+  color-scheme: dark;
+}
+
+@theme inline {
+  --color-bg: var(--fo-bg);
+  --color-surface: var(--fo-surface);
+  --color-raised: var(--fo-surface-raised);
+  --color-sunken: var(--fo-surface-sunken);
+  --color-line: var(--fo-border);
+  --color-line-strong: var(--fo-border-strong);
+  --color-ink: var(--fo-text);
+  --color-muted: var(--fo-text-muted);
+  --color-subtle: var(--fo-text-subtle);
+  --color-primary: var(--fo-primary);
+  --color-primary-hover: var(--fo-primary-hover);
+  --color-on-primary: var(--fo-primary-text);
+  --color-accent: var(--fo-accent);
+  --color-accent-hover: var(--fo-accent-hover);
+  --color-on-accent: var(--fo-accent-text);
+  --color-link: var(--fo-link);
+  --color-for: var(--fo-for);
+  --color-for-soft: var(--fo-for-soft);
+  --color-against: var(--fo-against);
+  --color-against-soft: var(--fo-against-soft);
+  --color-live: var(--fo-live);
+  --color-success: var(--fo-success);
+  --color-warning: var(--fo-warning);
+  --color-danger: var(--fo-danger);
+  --color-divider: var(--fo-ink);
+  --font-sans: "Inter Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Source Serif 4 Variable", Georgia, "Times New Roman", serif;
+}
+
+html { -webkit-text-size-adjust: 100%; }
+body {
+  background: var(--fo-bg);
+  color: var(--fo-text);
+  font-family: var(--font-sans);
+  font-feature-settings: "cv11", "ss01";
+  -webkit-font-smoothing: antialiased;
+}
+h1, h2, h3 { text-wrap: balance; }
+p { text-wrap: pretty; }
+
+:focus-visible {
+  outline: 2px solid var(--fo-focus);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+/* The proposition is the hero of every debate: always set in the serif. */
+.fo-proposition {
+  font-family: var(--font-serif);
+  font-weight: 600;
+  letter-spacing: -0.012em;
+  line-height: 1.15;
+}
+
+/* Signature divider: the logo's central ink line with its dot. */
+.fo-divider {
+  position: relative;
+  width: 2px;
+  background: var(--fo-ink);
+  border-radius: 2px;
+}
+.fo-divider::before {
+  content: "";
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  width: 9px;
+  height: 9px;
+  transform: translateX(-50%);
+  border-radius: 999px;
+  background: var(--fo-ink);
+}
+
+@keyframes fo-pulse { 0%, 100% { opacity: 1 } 50% { opacity: .35 } }
+.fo-live-dot { animation: fo-pulse 1.6s ease-in-out infinite; }
+
+@keyframes fo-pop { from { transform: translateY(0) scale(1); opacity: 1 } to { transform: translateY(-80px) scale(1.4); opacity: 0 } }
+.fo-reaction-pop { animation: fo-pop 1.4s ease-out forwards; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; }
+}
+
+.sr-only-focusable:not(:focus) { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
